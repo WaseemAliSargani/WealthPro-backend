@@ -108,7 +108,7 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
-// Update Transaction Status (Admin or Manual Update)
+// Update Transaction Status
 router.patch('/update-status/:transactionId', async (req, res) => {
   const { transactionId } = req.params;
   const { status } = req.body;

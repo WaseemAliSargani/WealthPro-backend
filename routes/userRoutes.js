@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 
 const router = express.Router();
 
-// Generate a unique alphanumeric invitation code (e.g., INVL8C6ZERP)
+// Generate a unique alphanumeric invitation code
 const generateInvitationCode = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let code = 'INV';
@@ -36,7 +36,7 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-// Get all users (fixes 404 for /api/users)
+// Get all users
 router.get('/', async (req, res) => {
   try {
     const users = await User.find().select('email balance plan invitationCode');
@@ -64,7 +64,14 @@ router.get('/me', authMiddleware, async (req, res) => {
 // Signup
 router.post('/signup', async (req, res) => {
   const { email, password, ref } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
   try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     let referredBy = null;
     if (ref) {
@@ -92,7 +99,7 @@ router.post('/signup', async (req, res) => {
       plan: null,
     });
     await user.save();
-    res.json({ message: 'User created', email, invitationCode });
+    res.status(201).json({ message: 'User created', email, invitationCode });
   } catch (error) {
     console.error('Signup error:', error.stack);
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -102,6 +109,9 @@ router.post('/signup', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
   try {
     const user = await User.findOne({ email });
     if (!user) {

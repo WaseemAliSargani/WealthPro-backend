@@ -1,9 +1,9 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "cors";
-import userRoutes from "./routes/userRoutes.js";
-import transactionRoutes from "./routes/transactionRoutes.js";
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import userRoutes from './routes/userRoutes.js';
+import transactionRoutes from './routes/transactionRoutes.js';
 
 dotenv.config();
 
@@ -12,16 +12,16 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/users", userRoutes);
-app.use("/api/transactions", transactionRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 // MongoDB Connection
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB Connected");
+    console.log('MongoDB Connected');
   } catch (error) {
-    console.error("MongoDB Connection Error:", error);
+    console.error('MongoDB Connection Error:', error);
     process.exit(1);
   }
 };

@@ -18,8 +18,10 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.error('MongoDB Error:', err));
 
+console.log('Mounting routes...');
 app.use('/users', userRoutes);
 app.use('/transactions', transactionRoutes);
+console.log('Routes mounted: /users, /transactions');
 
 app.get('/', (req, res) => {
   res.json({ message: 'Backend is running' });
