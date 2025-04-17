@@ -21,4 +21,9 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/users', userRoutes);
 app.use('/transactions', transactionRoutes);
 
+// Add root route for testing
+app.get('/', (req, res) => {
+  res.json({ message: 'Backend is running' });
+});
+
 export default app;
