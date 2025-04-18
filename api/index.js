@@ -19,8 +19,6 @@ app.use(express.json());
 
 console.log('Attempting MongoDB connection...');
 mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000,
   connectTimeoutMS: 10000
 })
@@ -31,7 +29,7 @@ mongoose.connect(process.env.MONGO_URI, {
     console.error('MongoDB Connection Error:', err.message, err.stack);
   });
 
-// Health check endpoint to verify MongoDB connection
+// Health check endpoint
 app.get('/health', async (req, res) => {
   try {
     const dbStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
