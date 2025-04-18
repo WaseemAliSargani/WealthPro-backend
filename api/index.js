@@ -6,6 +6,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 dotenv.config();
+console.log('MONGO_URI:', process.env.MONGO_URI ? 'Set' : 'Not set'); // Debug: Check if MONGO_URI is loaded
+
 const app = express();
 
 app.use(cors({
@@ -14,14 +16,19 @@ app.use(cors({
 }));
 app.use(express.json());
 
+console.log('Connecting to MongoDB...');
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.error('MongoDB Error:', err));
+  .catch(err => console.error('MongoDB Connection Failed:', err.message));
 
 console.log('Mounting routes...');
-app.use('/users', userRoutes);
-app.use('/transactions', transactionRoutes);
-console.log('Routes mounted: /users, /transactions');
+try {
+  app.use('/users', userRoutes);
+  app.use('/transactions', transactionRoutes);
+  console.log('Routes mounted: /users, /transactions');
+} catch (err) {
+  console.error('Error mounting routes:', err.message);
+}
 
 app.get('/', (req, res) => {
   res.json({ message: 'Backend is running' });
