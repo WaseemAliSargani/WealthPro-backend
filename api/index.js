@@ -27,4 +27,9 @@ app.get('/', (req, res) => {
   res.json({ message: 'Backend is running' });
 });
 
+app.use((req, res) => {
+  console.log(`404: ${req.method} ${req.url}`);
+  res.status(404).json({ message: 'The page could not be found', error: 'NOT_FOUND' });
+});
+
 export default app;
